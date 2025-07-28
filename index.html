@@ -205,6 +205,18 @@
             margin: 2px;
             border-radius: 15px;
             font-size: 0.9rem;
+
+         /* Add to the style section */
+.card {
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    border: none;
+}
+
+.card-header {
+    border-radius: 15px 15px 0 0 !important;
+    font-weight: bold;
+}
         }
     </style>
 </head>
@@ -243,7 +255,38 @@
                 </div>
             </div>
         </div>
-        
+        <!-- Add this section just below the cricket-header div in the main menu -->
+<div class="row mb-4">
+    <div class="col-md-8 offset-md-2">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <i class="fas fa-tv"></i> View Live Score
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Paste Share Link:</label>
+                            <input type="text" id="viewShareLinkInput" class="form-control" placeholder="Paste share link here">
+                        </div>
+                        <button class="btn btn-primary" onclick="viewFromLink()">
+                            <i class="fas fa-link"></i> View Score
+                        </button>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Or Enter Access Code:</label>
+                            <input type="text" id="viewAccessCodeInput" class="form-control" placeholder="ABC123" maxlength="6">
+                        </div>
+                        <button class="btn btn-primary" onclick="viewByCode()">
+                            <i class="fas fa-search"></i> Find Match
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
         <!-- Single Match Setup -->
         <div id="singleMatchSetup" class="main-container team-setup">
             <div class="cricket-header">
@@ -672,7 +715,33 @@
         
         // Tournament functions (keep all existing tournament functions the same)
         // ... (all tournament functions remain unchanged) ...
+// View live score functions
+function viewFromLink() {
+    const link = document.getElementById('viewShareLinkInput').value.trim();
+    if (!link) return;
+    
+    try {
+        const url = new URL(link);
+        const matchId = url.searchParams.get('match');
+        if (matchId) {
+            window.location.href = `live.html?match=${matchId}`;
+        } else {
+            alert('Invalid share link format');
+        }
+    } catch (e) {
+        alert('Please enter a valid URL');
+    }
+}
 
+function viewByCode() {
+    const code = document.getElementById('viewAccessCodeInput').value.trim().toUpperCase();
+    if (!code || code.length !== 6) {
+        alert('Please enter a valid 6-digit code');
+        return;
+    }
+    
+    window.location.href = `live.html?code=${code}`;
+}
         // Single match form submission
         document.getElementById('matchSetupForm').addEventListener('submit', function(e) {
             e.preventDefault();
